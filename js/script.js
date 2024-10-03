@@ -1,4 +1,36 @@
 
+let arr_valores = [];
+
+window.addEventListener('load', function() {
+    
+    if(localStorage.getItem("user") != null){
+
+        let getUser = localStorage.getItem("user");
+        var user = JSON.parse(getUser);
+
+        arr_valores.push(user);
+        //pintarDatos();
+
+        let container = document.querySelector(".container");
+        container.innerHTML += "";
+
+        for (let i = 0; i < user.length; i++) {
+
+            let fichaID = user[i].id;
+
+            container.innerHTML += `
+            <div class="box box1" id="${fichaID}">
+                <div>Usuario: ${user[i].nombre}</div>
+                <div>Email: ${user[i].email}</div>
+                <div>Comentario: ${user[i].comentario}</div>
+                <div>Imagen: ${user[i].imagen}</div>
+                <button onclick="eliminarFicha('${fichaID}')">Eliminar ficha</button>
+            </div>
+            `;
+        }
+    }
+});
+
 document.querySelector("form").addEventListener("submit", function (event) {
     event.preventDefault(); // paraliza envío formulario
 
@@ -15,14 +47,34 @@ document.querySelector("form").addEventListener("submit", function (event) {
     if (emailPattern.test(email)) {
         console.log("Correo electrónico válido.");
         guardarDatos(event.target.elements);
-        leerDatos();
+        //pintarDatos();
+
+        let getUser = localStorage.getItem("user");
+        var user = JSON.parse(getUser);
+
+        let container = document.querySelector(".container");
+        container.innerHTML = "";
+
+        
+        for (let i = 0; i < user.length; i++) {
+
+            let fichaID = user[i].id;
+
+            container.innerHTML += `
+            <div class="box box1" id="${fichaID}">
+                <div>Usuario: ${user[i].nombre}</div>
+                <div>Email: ${user[i].email}</div>
+                <div>Comentario: ${user[i].comentario}</div>
+                <div>Imagen: ${user[i].imagen}</div>
+                <button onclick="eliminarFicha('${fichaID}')">Eliminar ficha</button>
+            </div>
+            `;
+        }
     } else {
         console.log("Correo electrónico no válido.");
         return false;
     }
 });
-
-let arr_valores = [];
 
 function guardarDatos(datos) {
 
@@ -33,11 +85,7 @@ function guardarDatos(datos) {
         comentario: datos.comentario.value,
         imagen: datos.imagen.value,
     }
-
-
     arr_valores.push(miObjeto);
-
-    console.log(arr_valores)
 
     localStorage.setItem(
         "user",
@@ -50,25 +98,26 @@ function leerDatos() {
     let getUser = localStorage.getItem("user");
     var user = JSON.parse(getUser);
 
-    pintarDatos(user);
+    return user;
 }
 
-function pintarDatos(usuario) {
+function pintarDatos() {
 
-    console.log(usuario.length)
+    let datosUsuario = leerDatos();
+
     let container = document.querySelector(".container");
-    container.innerHTML = "";
+    container.innerHTML += "";
 
-    for (let i = 0; i < usuario.length; i++) {
+    for (let i = 0; i < datosUsuario.length; i++) {
 
-        let fichaID = usuario[i].id;
+        let fichaID = datosUsuario[i].id;
 
         container.innerHTML += `
         <div class="box box1" id="${fichaID}">
-			<div>Usuario: ${usuario[i].nombre}</div>
-			<div>Email: ${usuario[i].email}</div>
-			<div>Comentario: ${usuario[i].comentario}</div>
-            <div>Imagen: ${usuario[i].imagen}</div>
+			<div>Usuario: ${datosUsuario[i].nombre}</div>
+			<div>Email: ${datosUsuario[i].email}</div>
+			<div>Comentario: ${datosUsuario[i].comentario}</div>
+            <div>Imagen: ${datosUsuario[i].imagen}</div>
             <button onclick="eliminarFicha('${fichaID}')">Eliminar ficha</button>
 		</div>
         `;
@@ -80,25 +129,29 @@ function eliminarFicha(ficha) {
     let fichaBorrar = document.querySelector("#" + ficha)
     fichaBorrar.remove();
 
-
     let getUser = localStorage.getItem("user");
     var user = JSON.parse(getUser);
     console.log(user);
 
-    for (let i = 0; i < arr.length; i++) {
-        let elemento = arr.find(el => el.id === id);
-        if (elemento) {
-            return i; // Retorna el índice cuando encuentra el objeto
-        }
-    }
+    let arrayActualizado = eliminarPorId(user, ficha);
+    //console.log("Array actualizado:", arrayActualizado);
+
+    localStorage.setItem(
+        "user",
+        JSON.stringify(arrayActualizado)
+    );
 }
 
-/* function encontrarIndicePorId(arr, id) {
-    for (let i = 0; i < arr.length; i++) {
-        let elemento = arr.find(el => el.id === id);
-        if (elemento) {
-            return i; // Retorna el índice cuando encuentra el objeto
-        }
+function eliminarPorId(arr, id) {
+    // Recorremos todos los elementos del array y 
+    //retornamos el índice del primer elemento que cumpla con la condición especificada
+    const indice = arr.findIndex(el => el.id === id);
+    
+    // Si el objeto existe, eliminarlo
+    if (indice !== -1) {
+        // índice_inicio, número_elementos_a_eliminar
+        arr.splice(indice, 1); // Elimina el objeto en la posición encontrada
     }
-    return -1; // Si no encuentra el objeto con el id dado
-} */
+    return arr; // devolvemos el array
+}
+
