@@ -67,14 +67,32 @@ body, html {
     box-shadow: 0 4px 5px rgba(38, 39, 40, 0.1);
 }
 
+.form-container h2 {
+    margin: 0px;
+}
+
+.form-container label {
+    display: block;
+    margin-top: 15px;
+}
+
 .form-container input,
 .form-container textarea {
     width: 100%;
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
+
+    outline: none;
+}
+.form-container input::placeholder, textarea::placeholder {
+    color: rgb(199, 199, 199);
 }
 
+.form-container .submit {
+    display: block;
+    margin-top: 15px;
+}
 .form-container button {
     background-color: #007BFF;
     color: white;

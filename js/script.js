@@ -11,8 +11,11 @@ window.addEventListener('load', function() {
         let container = document.querySelector(".container");
         container.innerHTML = "";
 
+        // pintamos el HTML de las fichas dentro de su contenedor
+        container.innerHTML += pintarHTML_ficha(user);
+
         // recorremos 'user' al ser un array
-        for (let i = 0; i < user.length; i++) {
+        /* for (let i = 0; i < user.length; i++) {
 
             let fichaID = user[i].id; // identificador único
 
@@ -28,12 +31,12 @@ window.addEventListener('load', function() {
                 </div>
             </div>
             `;
-        }
+        } */
         // definimos el boton 'btn_borrarTodos'
         const btn_borrarTodos = document.getElementById('btn_borrarTodos');
 
         // mostramos el boton 'btn_borrarTodos'
-        btn_borrarTodos.setAttribute('style', 'display: block');
+        btn_borrarTodos.setAttribute('style', 'display: none');
     }
 
     // Evento para eliminar todas las capas
@@ -73,7 +76,9 @@ document.querySelector("form").addEventListener("submit", function (event) {
 
         let user = leer_localStorage("user");
 
-        for (let i = 0; i < user.length; i++) {
+        container.innerHTML += pintarHTML_ficha(user);
+
+        /* for (let i = 0; i < user.length; i++) {
 
             let fichaID = user[i].id;
 
@@ -88,7 +93,7 @@ document.querySelector("form").addEventListener("submit", function (event) {
                 </div>
             </div>
             `;
-        }
+        } */
         btn_borrarTodos.setAttribute('style', 'display: block');
     } else {
         console.log("Correo electrónico no válido.");
@@ -140,6 +145,30 @@ function guardarDatos(datos) {
     );
 }
 
+// creamos el HTML de las fichas
+function pintarHTML_ficha(arr){
+
+    let cadena = "";
+
+    for (let i = 0; i < arr.length; i++) {
+
+        let fichaID = arr[i].id;
+
+        cadena += `
+        <div class="box box1" id="${fichaID}">
+            <div><strong>Usuario:</strong> ${arr[i].nombre}</div>
+            <div><strong>Email:</strong> ${arr[i].email}</div>
+            <div><strong>Comentario:</strong> ${arr[i].comentario}</div>
+            <div><strong>Imagen:</strong> ${arr[i].imagen}</div>
+            <div onclick="eliminarFicha('${fichaID}')" style="width:100%; text-align:right;">
+                <i class="fas fa-trash delete-icon" title="Eliminar ficha de ${arr[i].nombre}"></i>
+            </div>
+        </div>
+        `;
+    }
+    return cadena;
+}
+
 function eliminarFicha(ficha_id) {
 
     // eliminamos la ficha del HTML
@@ -148,8 +177,8 @@ function eliminarFicha(ficha_id) {
 
     // obtenemos el valor actual del localStorage 'user'
     let user = leer_localStorage("user");
-
-    // modificamos el localStorage
+    
+    // eliminamos del array 'user' el indice que corresponda con 'ficha_id'
     let arrayActualizado = eliminarPorId(user, ficha_id);
 
     // actualizamos el localStorage 'user'
@@ -157,6 +186,14 @@ function eliminarFicha(ficha_id) {
         "user",
         JSON.stringify(arrayActualizado)
     );
+
+    // Si arrayActualizado.length es igual a 0
+    // significa que el localStorage 'user' está vacio
+    // por lo que ocultamos el botón 'btn_borrarTodos'
+    if(arrayActualizado.length == 0){
+        const btn_borrarTodos = document.getElementById('btn_borrarTodos');
+        btn_borrarTodos.setAttribute('style', 'display: none');
+    }
 }
 
 function eliminarPorId(arr, f_id) {
@@ -171,6 +208,21 @@ function eliminarPorId(arr, f_id) {
         arr.splice(indice, 1); // Elimina el objeto en la posición encontrada
     }
     return arr; // devolvemos el array
+}
+
+function checkDuplicateEmail(usersArray) {
+    const emails = [];
+    
+    for (let user of usersArray) {
+        if (emails.includes(user.email)) {
+            console.log(`El email ${user.email} ya existe.`);
+            return true; // Retorna true si encuentra un email duplicado
+        }
+        emails.push(user.email);
+    }
+    
+    console.log("No hay emails duplicados.");
+    return false; // Retorna false si no hay duplicados
 }
 
 
