@@ -1,6 +1,11 @@
 
 window.addEventListener('load', function() {
     
+    // inicializamos el localStorage 'user' a vacio
+    /* localStorage.setItem(
+        "user",
+        JSON.stringify([])
+    ); */
     // Si existe el id 'user' del localStorage
     if(localStorage.getItem("user") != null){
 
@@ -69,6 +74,12 @@ document.querySelector("form").addEventListener("submit", function (event) {
     if (emailPattern.test(email)) {
         console.log("Correo electrónico válido.");
 
+        let esDuplicado = leer_localStorage("user");
+        if(esDuplicado != null){
+            console.log("esDuplicado=", esDuplicado);
+            //checkEmailDuplicado(esDuplicado)
+        }
+
         guardarDatos(event.target.elements);
 
         let container = document.querySelector(".container");
@@ -105,13 +116,12 @@ function guardarDatos(datos) {
 
     // vacio el array arr_valores
     let arr_valores = [];
-    let popo;
-
+    let user;
     // Si existe el id 'user' del localStorage
     if(localStorage.getItem("user") != null){
         
         // obtenemos el valor actual del localStorage 'user'
-        let user = leer_localStorage("user");
+        user = leer_localStorage("user");
 
         // momento crucial 1
         // el valor de 'user' llega como un array
@@ -119,8 +129,8 @@ function guardarDatos(datos) {
         // con el operador de propagación y los asignamos al array arr_valores
         // Si hacemos un arr_valores.push(user) lo estamos haciendo mal
         // porque creamos un array de arrays
-        arr_valores = [...user];
-        console.log("1. arr_valores", arr_valores);
+        //arr_valores = user;
+        //console.log("1. arr_valores", arr_valores);
     }
     
     // obtengo los datos del formulario 
@@ -135,13 +145,13 @@ function guardarDatos(datos) {
     }
     // momento crucial 2
     // inserto el objeto 'nuevoUser' dentro del array 'arr_valores'
-    arr_valores.push(nuevoUser);
-    console.log("2. arr_valores", arr_valores);
+    user.push(nuevoUser);
+    //console.log("2. arr_valores", arr_valores);
 
     // guardamos los valores del array 'arr_valores' en el localStorage 'user'
     localStorage.setItem(
         "user",
-        JSON.stringify(arr_valores)
+        JSON.stringify(user)
     );
 }
 
@@ -196,6 +206,7 @@ function eliminarFicha(ficha_id) {
     }
 }
 
+// hacer filter
 function eliminarPorId(arr, f_id) {
     // Recorremos todos los elementos del array y 
     // devolvemos el índice del primer elemento que cumpla con la condición especificada
@@ -210,7 +221,7 @@ function eliminarPorId(arr, f_id) {
     return arr; // devolvemos el array
 }
 
-function checkDuplicateEmail(usersArray) {
+function checkEmailDuplicado(usersArray) {
     const emails = [];
     
     for (let user of usersArray) {
