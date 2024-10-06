@@ -11,11 +11,15 @@ body, html {
     font-family: Arial, sans-serif;
 }
 
+#boxMain{
+    width:100%;
+    padding:20px;
+    margin: 0px auto;
+}
 .box {
     flex: 1;
     display: flex;
     justify-content: center;
-    align-items: center;
     font-size: 0.9em;
     color: rgb(50, 54, 62);
     width: 200px;
@@ -42,18 +46,29 @@ body, html {
     background-color: rgb(167, 167, 230);
 }
 
-.delete-icon {
-    color: rgb(50, 54, 62); /* Color del ícono */
+/* Contenedor de íconos */
+.icon-container {
+    gap: 10px; 
+    width: 100%; 
+    display: flex;
+    justify-content: flex-end; 
+}
+
+/* Estilo de los íconos */
+.edit-icon, .delete-icon {
+    color: rgb(50, 54, 62);
     cursor: pointer;
-    font-size: 1.2em; /* Tamaño del ícono */
-    margin-left: auto; /* Empuja el ícono a la derecha */
-    padding: 0; /* Elimina padding innecesario */
-    display: block;
-    align-self: flex-end; /* Alinea el ícono al final de la caja */
+    font-size: 1.2em;
+    transition: color 0.3s;
+}
+
+/* Efecto hover para los íconos */
+.edit-icon:hover {
+    color: rgb(96, 187, 88); /* Cambia el color del ícono de editar al pasar el ratón */
 }
 
 .delete-icon:hover {
-    color: red; /* Cambia el color del ícono al pasar el ratón */
+    color: red; /* Cambia el color del ícono de eliminar al pasar el ratón */
 }
 
 /* Estilos para la primera parte (formulario) */
@@ -61,7 +76,7 @@ body, html {
     background-color: #f4f4f4;
     padding: 20px;
     max-width: 500px;
-    margin: 20px auto;
+    margin: 5px auto;
     border-radius: 5px;
     border:1px solid #CCCCCC;
     box-shadow: 0 4px 5px rgba(38, 39, 40, 0.1);
@@ -134,4 +149,8 @@ body, html {
 
 .btn_borrarTodos:hover {
     background-color: #6ad132;
+}
+
+.po{
+    color: rgb(219, 197, 145);
 }
