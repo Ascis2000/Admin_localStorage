@@ -1,11 +1,17 @@
 
 window.addEventListener('load', function() {
     
-    // inicializamos el localStorage 'user' a vacio
-    localStorage.setItem(
-        "user",
-        JSON.stringify([])
-    );
+    let user = leer_localStorage("user");
+
+    if(user == null){
+        localStorage.removeItem("user");
+        // inicializamos el localStorage 'user' a vacio
+        localStorage.setItem(
+            "user",
+            JSON.stringify([])
+        );
+    }
+    
     // definimos el boton 'btn_borrarTodos'
     const btn_borrarTodos = document.getElementById('btn_borrarTodos');
 
@@ -42,11 +48,11 @@ document.querySelector("#form_main").addEventListener("submit", function (event)
     if (emailPattern.test(email)) {
         console.log("Correo electrónico válido.");
 
-        let esDuplicado = leer_localStorage("user");
+        /* let esDuplicado = leer_localStorage("user");
         if(esDuplicado != null){
             console.log("esDuplicado=", esDuplicado);
             //checkEmailDuplicado(esDuplicado)
-        }
+        } */
 
         guardarDatos(event.target.elements);
         this.reset();
